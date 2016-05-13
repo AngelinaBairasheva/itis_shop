@@ -3,7 +3,7 @@ package org.spring.itis.controllers;
 import org.itis.hib.domain.Order;
 import org.itis.hib.service.OrderService;
 import org.itis.hib.service.UserService;
-import org.itis.hib.util.Constants;
+import org.spring.itis.util.Constants;
 import org.spring.itis.validator.OrderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class OrderController {
     @RequestMapping(value = "/orders_list", method = RequestMethod.GET)
     public String renderOrdersList(  ModelMap modelMap) {
         modelMap.addAttribute("orders_list", orderService.getAllOrders());
-        return Constants.ATTR_ORDERS_LIST;
+        return Constants.VIEW_ORDERS_LIST;
     }
     @RequestMapping(value = "/new_order", method = RequestMethod.POST)
     public String addOrder(@ModelAttribute("order") Order order,
@@ -38,7 +38,7 @@ public class OrderController {
         orderValidator.validate(order, result);
         if (result.hasErrors()) {
             request.setAttribute("usersList", userService.getAllUsers());
-            return Constants.ATTR_ORDER_FORM;
+            return Constants.VIEW_ORDER_FORM;
         }
         orderService.addOrder(order);
         return "redirect:orders_list";
@@ -47,7 +47,7 @@ public class OrderController {
     public String renderOrderForm(ModelMap modelMap) {
         modelMap.addAttribute("usersList", userService.getAllUsers());
         modelMap.addAttribute("order", new Order());
-        return Constants.ATTR_ORDER_FORM;
+        return Constants.VIEW_ORDER_FORM;
     }
 
     @RequestMapping(value = "/edit_order", method = RequestMethod.POST)
@@ -57,7 +57,7 @@ public class OrderController {
         if (result.hasErrors()) {
             request.setAttribute("usersList", userService.getAllUsers());
             request.setAttribute("cur_order", orderService.getOrderById(order.getId()));
-            return Constants.ATTR_ORDER_EDIT_FORM;
+            return Constants.VIEW_ORDER_EDIT_FORM;
         }
         orderService.updateOrder(order);
         return "redirect:orders_list";
@@ -72,6 +72,6 @@ public class OrderController {
         modelMap.addAttribute("order", new Order());
         modelMap.addAttribute("usersList", userService.getAllUsers());
         modelMap.addAttribute("cur_order", orderService.getOrderById(id));
-        return Constants.ATTR_ORDER_EDIT_FORM;
+        return Constants.VIEW_ORDER_EDIT_FORM;
     }
 }

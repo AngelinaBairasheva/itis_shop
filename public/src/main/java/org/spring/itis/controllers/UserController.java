@@ -5,7 +5,7 @@ import org.itis.hib.domain.RegistratedUser;
 import org.itis.hib.domain.User;
 import org.itis.hib.service.RegistratedUserService;
 import org.itis.hib.service.UserService;
-import org.itis.hib.util.Constants;
+import org.spring.itis.util.Constants;
 import org.spring.itis.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,11 +31,11 @@ public class UserController {
         RegistratedUser current_user = registratedUserService.getUserByLogin(request.getParameter("login"));
         if (current_user == null) {
             modelMap.addAttribute("error", "Неверно введён логин или пароль");
-            return Constants.ATTR_MAIN;
+            return Constants.VIEW_MAIN;
         }
         if (!current_user.getHash_password().equals(DigestUtils.md5Hex(request.getParameter("password") + Constants.SAULT))) {
             modelMap.addAttribute("error", "Неверно введён логин или пароль");
-            return Constants.ATTR_MAIN;
+            return Constants.VIEW_MAIN;
         }
         return "redirect:users_list";
     }
@@ -45,7 +45,7 @@ public class UserController {
                           BindingResult result) {
         userValidator.validate(user, result);
         if (result.hasErrors()) {
-            return Constants.ATTR_USER_FORM;
+            return Constants.VIEW_USER_FORM;
         }
         userService.addUser(user);
         return "redirect:users_list";
@@ -54,7 +54,7 @@ public class UserController {
     @RequestMapping(value = "/new_user", method = RequestMethod.GET)
     public String renderUserForm(ModelMap modelMap) {
         modelMap.addAttribute("user", new User());
-        return Constants.ATTR_USER_FORM;
+        return Constants.VIEW_USER_FORM;
     }
 
     @RequestMapping(value = "/edit_user", method = RequestMethod.POST)
@@ -63,7 +63,7 @@ public class UserController {
         userValidator.validate(user, result);
         if (result.hasErrors()) {
             modelMap.addAttribute("cur_user", userService.getUserById(user.getId()));
-            return Constants.ATTR_USER_EDIT_FORM;
+            return Constants.VIEW_USER_EDIT_FORM;
         }
         userService.updateUser(user);
         return "redirect:users_list";
@@ -79,12 +79,12 @@ public class UserController {
     public String renderUserEditForm(@RequestParam("id") Integer id, ModelMap modelMap) {
         modelMap.addAttribute("user", new User());
         modelMap.addAttribute("cur_user", userService.getUserById(id));
-        return Constants.ATTR_USER_EDIT_FORM;
+        return Constants.VIEW_USER_EDIT_FORM;
     }
 
     @RequestMapping(value = "/users_list", method = RequestMethod.GET)
     public String renderUsersList(ModelMap modelMap) {
         modelMap.addAttribute("users_list", userService.getAllUsers());
-        return Constants.ATTR_USERS_LIST;
+        return Constants.VIEW_USERS_LIST;
     }
 }

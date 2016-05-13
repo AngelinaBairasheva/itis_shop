@@ -1,7 +1,7 @@
 package org.itis.hib.service;
 
-import org.itis.hib.domain.RegistratedUser;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.itis.hib.domain.RegistratedUser;
 import org.itis.hib.util.Constants;
 import org.springframework.stereotype.Service;
 
